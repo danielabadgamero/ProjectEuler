@@ -16,17 +16,29 @@ int main()
 		input.get();
 	}
 
-	int64_t carry{};
+	std::vector<int> bases{};
+	int carry{};
 	for (int i{}; i != 50; i++)
 	{
-		int64_t sum{};
-		for (char& c : nums[i])
-			sum += c - '0';
-		sum += carry;
-		carry = sum / 10;
+		bases.push_back(0);
+		for (std::string& num : nums)
+			bases.back() += num[49 - i] - '0';
+		bases.back() += carry;
+		carry = bases.back() / 10;
+		bases.back() %= 10;
 	}
+	std::string carryDigits{ std::to_string(carry) };
+	for (std::string::reverse_iterator c{ carryDigits.rbegin() }; c != carryDigits.rend(); c++)
+		bases.push_back(*c - '0');
 
-	std::cout << carry << '\n';
+	int digit{};
+	for (std::vector<int>::reverse_iterator d{ bases.rbegin() }; d != bases.rend(); d++)
+	{
+		if (digit == 10)
+			break;
+		std::cout << *d;
+		digit++;
+	}
 
 	return 0;
 }
